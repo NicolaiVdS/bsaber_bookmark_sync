@@ -92,7 +92,7 @@ def add_to_bookmark(cj: any, song_ids: list):
         if response.status_code != 200:
             print(f'error adding song with id {song}')
         else:
-            print(f"added song with song id {song} to your bookmarks")
+            print(f"added song with song id {song} to your bookmarks.")
 
 
 if __name__ == '__main__':
