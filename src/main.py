@@ -2,6 +2,7 @@
 import requests
 import browser_cookie3
 import re
+import progressbar
 from bs4 import BeautifulSoup
 
 
@@ -56,13 +57,13 @@ def get_diffs(own: list, friend: list):
 
 
 def get_post_id(diffs: list):
+    print(f"Getting {len(diffs)} song Id's")
     song_ids = []
     url = 'https://bsaber.com/songs/{}'
-    for song in diffs:
+    for song in progressbar.progressbar(diffs):
         song_url = url.format(song['song_key'])
         soup = BeautifulSoup(requests.get(song_url).content, 'html.parser')
         for data_id in soup.findAll("a", attrs={"data-id": re.compile(r"\d+")}):
-            print(f"found song id for song {song['title']}: {data_id.attrs.get('data-id', None)}")
             song_ids.append(data_id.attrs.get("data-id", None))
     return song_ids
 
@@ -72,7 +73,8 @@ def get_browser_cookies():
 
 
 def add_to_bookmark(cj: any, song_ids: list):
-    for song in song_ids:
+    print(f"adding {len(song_ids)} to your bookmarks.")
+    for song in progressbar.progressbar(song_ids):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0',
             'Accept': '*/*',
@@ -91,8 +93,6 @@ def add_to_bookmark(cj: any, song_ids: list):
         response = requests.post('https://bsaber.com/wp-admin/admin-ajax.php', headers=headers, cookies=cj, data=data)
         if response.status_code != 200:
             print(f'error adding song with id {song}')
-        else:
-            print(f"added song with song id {song} to your bookmarks.")
 
 
 if __name__ == '__main__':
