@@ -33,6 +33,8 @@ def main():
     else:
         print("You dont have any missing songs.")
 
+    input("Press enter and exit...")
+
 
 def get_bookmarks(username: str, page=1):
     url = f"https://bsaber.com/wp-json/bsaber-api/songs/?bookmarked_by={username}&page={page}&count=200"
